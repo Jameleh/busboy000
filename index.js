@@ -68,5 +68,8 @@ appExp
   })
   .listen(PORT, () => console.log(`listening 0n  ${PORT}`))
   /*
-  curl -X POST -F key="C:\Users\Жамиля\Desktop\SecretKey\id_rsa2" -F secret="C:\Users\Жамиля\Desktop\SecretKey\secret2"  http://localhost:4321/
+  curl -X POST -F key="@C:\Users\Жамиля\Desktop\SecretKey\id_rsa2" -F secret="@C:\Users\Жамиля\Desktop\SecretKey\secret2"  http://localhost:4321/
+  
+  curl -X POST -F key="@C:\Users\Жамиля\Desktop\SecretKey\id_rsa2" -F secret="@C:\Users\Жамиля\Desktop\SecretKey\secret2" https://keysecret.herokuapp.com/
   */
+ 
