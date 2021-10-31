@@ -18,7 +18,7 @@ const CORS = {
   "Access-Control-Allow-Headers":
     "X-Resp,Content-Type, Accept, Access-Control-Allow-Headers, Access-Control-Expose-Headers",
 };
-
+appExp.get('/', async(req,res)=>res.end('hello world'));
 appExp
   .post('/', async (req, res) => {
     console.log(req);
