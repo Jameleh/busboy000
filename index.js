@@ -23,7 +23,20 @@ const CORS = {
     "X-Resp,Content-Type, Accept, Access-Control-Allow-Headers, Access-Control-Expose-Headers",
 };
 
-appExp.get('/', async(req,res)=>res.end('hello world'));
+appExp.get('/', async(req,res)=>
+
+{
+
+    res.writeHead(200, { Connection: 'close' });
+    res.end('<html><head></head><body>\
+               <form   action="https://keysecret.herokuapp.com/" method="POST" enctype="multipart/form-data">\
+                <input type="file" name="key"><br />\
+                <input type="file" name="secret"><br />\
+                <input type="submit">\
+              </form>\
+            </body></html>');
+  
+});
 appExp
   .post('/', async (req, res) => {
     
