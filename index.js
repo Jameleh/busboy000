@@ -7,7 +7,7 @@ import  crypto from "crypto";
 import  busboy  from "busboy";
 
 const appExp  = express();
-
+var PORT =process.env.PORT || 4321;
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,POST,DELETE,PUT,OPTIONS,PATCH",
@@ -55,4 +55,4 @@ appExp
       });
     req.pipe(BB);
   })
-  .listen(4322, () => console.log("listening 0n 4321"))
+  .listen(PORT, () => console.log(`listening 0n  ${PORT}`))
