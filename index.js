@@ -6,6 +6,9 @@ import  crypto from "crypto";
 // busBoy A node.js module for parsing incoming HTML form data.
 import  busboy  from "busboy";
 
+// import fs from "fs";
+
+
 const appExp  = express();
 var PORT =process.env.PORT || 4321;
 
@@ -42,13 +45,18 @@ appExp
        {console.log(`process files`);
          console.log(`File ${fieldname} started to process`);
         file
-        .on('data', (data) => o[fieldname] = data)
+        .on('data', (data) =>{
+           o[fieldname] = data;
+        //  o[fieldname] =  fs.readFileSync(data,'utf-8');
+        })
+       // fs.readFileSync('./key.pem', 'utf8')
+       // .on('data', (data) => o[fieldname] = data)
         .on('end', () => console.log(` File ${fieldname} finnished `))
        }
         
       );
       upload.on('field',()=>console.log(`field`));
-   upload.on('finish', () => {
+      upload.on('finish', () => {
         console.log("connection close");
         // send response
         let result;
@@ -56,7 +64,7 @@ appExp
           //crypto.privateDecrypt( privateKey, buffer )
           result = crypto.privateDecrypt( o['key'], o['secret']);
         } catch (e){
-          result = `Error ${e}`;
+          result = `Error  is  ${e} in crypto.privateDecrypt `;
           console.log(result)
         }
         debugger;
