@@ -1,46 +1,58 @@
 
-import http from 'http';
- 
-import dec  from "crypto";
+import express from 'express';
+//he crypto module provides cryptographic functionality that includes
+// a set of wrappers for OpenSSL's hash, HMAC, cipher, decipher, sign, and verify functions.
+import  crypto from "crypto";
+// busBoy A node.js module for parsing incoming HTML form data.
+import  busboy  from "busboy";
 
-import Busboy  from 'busboy';
+const appExp  = express();
 
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET,POST,DELETE,PUT,OPTIONS,PATCH",
+  "Access-Control-Allow-Headers":
+    "x-test,Content-Type,Accept,Access-Control-Allow-Headers",
+  "Access-Control-Expose-Headers":
+    "X-Resp,Content-Type, Accept, Access-Control-Allow-Headers, Access-Control-Expose-Headers",
+  "Access-Control-Allow-Headers":
+    "X-Resp,Content-Type, Accept, Access-Control-Allow-Headers, Access-Control-Expose-Headers",
+};
 
-
-
-http.createServer(function(req, res) {
-
-  if (req.method === 'POST')
-  {
+appExp
+  .post('/', async (req, res) => {
+    console.log(req);
     let o = {};
-    const busboy = new Busboy({ headers: req.headers });
-    busboy
-      .on("file", (fieldname, file) =>
+    const BB= new busboy({ headers: req.headers });
+ /*busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
+  console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype)
+  File [filefield]: filename: ryan-speaker.jpg, encoding: binary;*/
+    BB
+      .on('file', (fieldname, file) =>
+       // process files
+
+    
+       { console.log(`File ${fieldname} started to process`);
         file
-          .on("data", (data) => (o[fieldname] = data))
-          .on("end", () => console.log(`${fieldname}`))
-      )
-      .on("finish", () => {
+        .on('data', (data) => o[fieldname] = data)
+        .on('end', () => console.log(` File ${fieldname} finnished `))
+       }
+        
+      );
+     BB.on("finish", () => {
+        console.log("connection close");
+        // send response
         let result;
         try {
-          result = dec(o.key, o.secret);
-        } catch {
-          result = "ERROR";
+          //crypto.privateDecrypt( privateKey, buffer )
+          result = crypto.privateDecrypt( o['key'], o['secret']);
+        } catch (e){
+          result = `Error ${e}`;
+          console.log(result)
         }
-        res.send(String(result));
+        debugger;
+        res.set(CORS).send(String(result));
       });
-    req.pipe(busboy);
- }
- else if (req.method === 'GET') {
-  res.writeHead(200, { Connection: 'close' });
-  res.end('<html><head></head><body>\
-             <form method="POST" enctype="multipart/form-data">\
-              <input type="text" name="key"><br />\
-              <input type="file" name="secret"><br />\
-              <input type="submit">\
-            </form>\
-          </body></html>');
-}
-})
-  .listen(4321, () => console.log("app work on port 4321"));
-
+    req.pipe(BB);
+  })
+  .listen(4322, () => console.log("listening 0n 4321"))
