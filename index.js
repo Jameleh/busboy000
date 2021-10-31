@@ -62,8 +62,24 @@ appExp
         let result;
         try {
           //crypto.privateDecrypt( privateKey, buffer )
-          result = crypto.privateDecrypt( o['key'], o['secret']);
+           /*
+          Error  is  Error: error:0909006C:PEM routines:get_name:no start line in crypto.privateDecrypt
+          var crt = crypto.createPrivateKey(fs.readFileSync(curPath + '/openssl/something.key.pem'));*/
+          var crt = crypto.createPrivateKey(o['key']);
+          var buffer = Buffer.from(o['secret'],'base64');
+          //var msg = crypto.privateDecrypt({ key: crtUse, padding: crypto.constants.RSA_PKCS1_PADDING }, buffer).toString('utf8');
+          //result = crypto.privateDecrypt({key:crt,padding :crypto.constants.RSA_PKCS1_PADDING}, buffer).toString('utf8');
+          result = crypto.privateDecrypt(crt, buffer).toString('utf8');
+         // result = crypto.privateDecrypt( o['key'], o['secret']);
         } catch (e){
+
+          /*
+          Error  is  Error: error:0909006C:PEM routines:get_name:no start line in crypto.privateDecrypt
+          var crt = crypto.createPrivateKey(fs.readFileSync(curPath + '/openssl/something.key.pem'));
+          var buffer = Buffer.from(to_decrypt);
+          var msg = crypto.privateDecrypt({ key: crtUse, padding: crypto.constants.RSA_PKCS1_PADDING }, buffer).toString('utf8');
+
+          */
           result = `Error  is  ${e} in crypto.privateDecrypt `;
           console.log(result)
         }
