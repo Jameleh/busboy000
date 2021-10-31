@@ -8,6 +8,7 @@ import  busboy  from "busboy";
 
 const appExp  = express();
 var PORT =process.env.PORT || 4321;
+
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,POST,DELETE,PUT,OPTIONS,PATCH",
@@ -18,28 +19,36 @@ const CORS = {
   "Access-Control-Allow-Headers":
     "X-Resp,Content-Type, Accept, Access-Control-Allow-Headers, Access-Control-Expose-Headers",
 };
+
 appExp.get('/', async(req,res)=>res.end('hello world'));
 appExp
   .post('/', async (req, res) => {
-    console.log(req);
+    
     let o = {};
-    const BB= new busboy({ headers: req.headers });
+   let  upload= new busboy({ headers: req.headers });
+  upload.on('error', (err) => {
+    debugLog(options, `Busboy error`);
+    next(err);
+   });
  /*busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
   console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype)
   File [filefield]: filename: ryan-speaker.jpg, encoding: binary;*/
-    BB
-      .on('file', (fieldname, file) =>
+  // This code will process each file uploaded.
+  upload
+      .on('file', (fieldname, file , filename, encoding, mimetype) =>
        // process files
 
-    
-       { console.log(`File ${fieldname} started to process`);
+
+       {console.log(`process files`);
+         console.log(`File ${fieldname} started to process`);
         file
         .on('data', (data) => o[fieldname] = data)
         .on('end', () => console.log(` File ${fieldname} finnished `))
        }
         
       );
-     BB.on("finish", () => {
+      upload.on('field',()=>console.log(`field`));
+   upload.on('finish', () => {
         console.log("connection close");
         // send response
         let result;
@@ -52,7 +61,12 @@ appExp
         }
         debugger;
         res.set(CORS).send(String(result));
+      // res.send(String(result));
       });
-    req.pipe(BB);
+   //liga request no upload (budboy)
+    req.pipe(upload);
   })
   .listen(PORT, () => console.log(`listening 0n  ${PORT}`))
+  /*
+  curl -X POST -F key="C:\Users\Жамиля\Desktop\SecretKey\id_rsa2" -F secret="C:\Users\Жамиля\Desktop\SecretKey\secret2"  http://localhost:4321/
+  */
