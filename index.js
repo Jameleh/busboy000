@@ -29,7 +29,7 @@ appExp.get('/', async(req,res)=>
 
     res.writeHead(200, { Connection: 'close' });
     res.end('<html><head></head><body>\
-               <form   action="https://keybb.herokuapp.com/" method="POST" enctype="multipart/form-data">\
+               <form   action="/test" method="POST" enctype="multipart/form-data">\
                 <input type="file" name="key"><br />\
                 <input type="file" name="secret"><br />\
                 <input type="submit">\
@@ -38,7 +38,7 @@ appExp.get('/', async(req,res)=>
   
 });
 appExp
-  .post('/', async (req, res) => {
+  .post('/test', async (req, res) => {
     
     let o = {};
    let  upload= new busboy({ headers: req.headers });
